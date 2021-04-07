@@ -1,46 +1,33 @@
 import React from "react";
-import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
-    text: {
+    typographyText: {
       fontWeight: 400,
       display: "inline-block",
       fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
       fontSize: 18,
       lineHeight: "24px",
+      padding: 0,
+      margin: 0,
       "& a": {
-        color: "#27AE60",
+        color: "inherit",
         textDecoration: "inherit",
+        verticalAlign: 'middle'
       },
     },
     p1: {
       fontSize: 18,
       lineHeight: "24px",
-      ["@media (max-width:960px)"]: {
-        fontSize: 16,
-        lineHeight: "20px",
-      },
-      ["@media (max-width:600px)"]: {
-        fontSize: 14,
-        lineHeight: "20px",
-      },
     },
     p2: {
       fontSize: 16,
       lineHeight: "20px",
-      ["@media (max-width:960px)"]: {
-        fontSize: 14,
-        lineHeight: "20px",
-      },
     },
     p2l: {
       fontSize: 18,
       lineHeight: "24px",
-      ["@media (max-width:960px)"]: {
-        fontSize: 14,
-        lineHeight: "24px",
-      },
     },
     p3: {
       fontSize: 14,
@@ -50,10 +37,12 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: 12,
       lineHeight: "16px",
     },
-    title: {
+    typographyTitle: {
       display: "inline-block",
-      fontWeight: 700,
+      fontWeight: 500,
       lineHeight: "52px",
+      padding: 0,
+      margin: 0,
       "& a": {
         color: "inherit",
         textDecoration: "inherit",
@@ -73,50 +62,26 @@ const useStyles = makeStyles((theme: Theme) =>
     h2: {
       fontSize: 40,
       lineHeight: "40px",
-      ["@media (max-width:960px)"]: {
+      ["@media (max-width:600px)"]: {
         fontSize: 28,
         lineHeight: "28px",
-      },
-      ["@media (max-width:600px)"]: {
-        fontSize: 18,
-        lineHeight: "20px",
       },
     },
     h3: {
       fontSize: 28,
       lineHeight: "28px",
-      ["@media (max-width:960px)"]: {
-        fontSize: 22,
-        lineHeight: "24px",
-      },
     },
     h4: {
       fontSize: 22,
       lineHeight: "24px",
-      ["@media (max-width:960px)"]: {
-        fontSize: 18,
-        lineHeight: "20px",
-      },
     },
     h5: {
       fontSize: 20,
       lineHeight: "24px",
-      ["@media (max-width:960px)"]: {
-        fontSize: 16,
-        lineHeight: "20px",
-      },
-      ["@media (max-width:600px)"]: {
-        fontSize: 14,
-        lineHeight: "24px",
-      },
     },
     h6: {
       fontSize: 18,
       lineHeight: "20px",
-      ["@media (max-width:960px)"]: {
-        fontSize: 14,
-        lineHeight: "20px",
-      },
     },
     block: {
       display: "block",
@@ -128,14 +93,13 @@ const useStyles = makeStyles((theme: Theme) =>
       fontWeight: 500,
     },
     bold: {
-      fontWeight: 700,
+      fontWeight: 600,
     },
   })
 );
 
 interface BccTypographyProps extends React.HTMLAttributes<HTMLDivElement> {
   children: any;
-  onClick?: any;
   weight?: "normal" | "medium" | "bold";
   color?: string;
   align?: "center" | "left" | "right" | "justify";
@@ -144,7 +108,7 @@ interface BccTypographyProps extends React.HTMLAttributes<HTMLDivElement> {
   mr?: string | "0";
   mb?: string | "0";
   ml?: string | "0";
-  td?: "underline" | "";
+  td?: "underline" | "none";
   type:
     | "h1"
     | "h2"
@@ -158,6 +122,7 @@ interface BccTypographyProps extends React.HTMLAttributes<HTMLDivElement> {
     | "p3"
     | "p4";
   className?: string;
+  onClick?: any;
 }
 
 const BccTypography = (props: BccTypographyProps) => {
@@ -175,55 +140,230 @@ const BccTypography = (props: BccTypographyProps) => {
     ml,
     className,
     children,
+    onClick
   } = props;
+
+  const weightClass =
+    weight === "bold"
+      ? classes.bold
+      : weight === "medium"
+      ? classes.medium
+      : classes.normal;
+  const blockClass = block ? classes.block : "";
+  const classNameClass = className ? className : "";
+  const styleClass = {
+    marginTop: mt,
+    marginRight: mr,
+    marginBottom: mb,
+    marginLeft: ml,
+    color: color,
+    textAlign: align,
+    textDecoration: td,
+  };
   return (
-    <span
-      className={`${
-        type === "h1"
-          ? classes.title + " " + classes.h1
-          : type === "h2"
-          ? classes.title + " " + classes.h2
-          : type === "h3"
-          ? classes.title + " " + classes.h3
-          : type === "h4"
-          ? classes.title + " " + classes.h4
-          : type === "h5"
-          ? classes.title + " " + classes.h5
-          : type === "h6"
-          ? classes.title + " " + classes.h6
-          : type === "p1"
-          ? classes.text + " " + classes.p1
-          : type === "p2"
-          ? classes.text + " " + classes.p2
-          : type === "p2l"
-          ? classes.text + " " + classes.p2l
-          : type === "p3"
-          ? classes.text + " " + classes.p3
-          : type === "p4"
-          ? classes.text + " " + classes.p4
-          : ""
-      } ${
-        weight === "bold"
-          ? classes.bold
-          : weight === "medium"
-          ? classes.medium
-          : weight === "normal"
-          ? classes.normal
-          : ""
-      } ${block ? classes.block : ""} ${className ? className : ""} `}
-      style={{
-        marginTop: mt,
-        marginRight: mr,
-        marginBottom: mb,
-        marginLeft: ml,
-        color: color,
-        textAlign: align,
-        textDecoration: td,
-      }}
-      onClick={props.onClick}
-    >
-      {children}
-    </span>
+    <>
+      {type === "h1" ? (
+        <h1
+          className={
+            classes.typographyTitle +
+            " " +
+            classes.h1 +
+            " " +
+            weightClass +
+            " " +
+            blockClass +
+            " " +
+            classNameClass
+          }
+          style={styleClass}
+          onClick={onClick && onClick}
+        >
+          {children}
+        </h1>
+      ) : type === "h2" ? (
+        <h2
+          className={
+            classes.typographyTitle +
+            " " +
+            classes.h2 +
+            " " +
+            weightClass +
+            " " +
+            blockClass +
+            " " +
+            classNameClass
+          }
+          style={styleClass}
+          onClick={onClick && onClick}
+        >
+          {children}
+        </h2>
+      ) : type === "h3" ? (
+        <h3
+          className={
+            classes.typographyTitle +
+            " " +
+            classes.h3 +
+            " " +
+            weightClass +
+            " " +
+            blockClass +
+            " " +
+            classNameClass
+          }
+          style={styleClass}
+          onClick={onClick && onClick}
+        >
+          {children}
+        </h3>
+      ) : type === "h4" ? (
+        <h3
+          className={
+            classes.typographyTitle +
+            " " +
+            classes.h4 +
+            " " +
+            weightClass +
+            " " +
+            blockClass +
+            " " +
+            classNameClass
+          }
+          style={styleClass}
+          onClick={onClick && onClick}
+        >
+          {children}
+        </h3>
+      ) : type === "h5" ? (
+        <h4
+          className={
+            classes.typographyTitle +
+            " " +
+            classes.h5 +
+            " " +
+            weightClass +
+            " " +
+            blockClass +
+            " " +
+            classNameClass
+          }
+          style={styleClass}
+          onClick={onClick && onClick}
+        >
+          {children}
+        </h4>
+      ) : type === "h6" ? (
+        <h5
+          className={
+            classes.typographyTitle +
+            " " +
+            classes.h6 +
+            " " +
+            weightClass +
+            " " +
+            blockClass +
+            " " +
+            classNameClass
+          }
+          style={styleClass}
+          onClick={onClick && onClick}
+        >
+          {children}
+        </h5>
+      ) : type === "p1" ? (
+        <p
+          className={
+            classes.typographyText +
+            " " +
+            classes.p1 +
+            " " +
+            weightClass +
+            " " +
+            blockClass +
+            " " +
+            classNameClass
+          }
+          style={styleClass}
+          onClick={onClick && onClick}
+        >
+          {children}
+        </p>
+      ) : type === "p2" ? (
+        <p
+          className={
+            classes.typographyText +
+            " " +
+            classes.p2 +
+            " " +
+            weightClass +
+            " " +
+            blockClass +
+            " " +
+            classNameClass
+          }
+          style={styleClass}
+          onClick={onClick && onClick}
+        >
+          {children}
+        </p>
+      ) : type === "p2l" ? (
+        <p
+          className={
+            classes.typographyText +
+            " " +
+            classes.p2l +
+            " " +
+            weightClass +
+            " " +
+            blockClass +
+            " " +
+            classNameClass
+          }
+          style={styleClass}
+          onClick={onClick && onClick}
+        >
+          {children}
+        </p>
+      ) : type === "p3" ? (
+        <p
+          className={
+            classes.typographyText +
+            " " +
+            classes.p3 +
+            " " +
+            weightClass +
+            " " +
+            blockClass +
+            " " +
+            classNameClass
+          }
+          style={styleClass}
+          onClick={onClick && onClick}
+        >
+          {children}
+        </p>
+      ) : type === "p4" ? (
+        <p
+          className={
+            classes.typographyText +
+            " " +
+            classes.p4 +
+            " " +
+            weightClass +
+            " " +
+            blockClass +
+            " " +
+            classNameClass
+          }
+          style={styleClass}
+          onClick={onClick && onClick}
+        >
+          {children}
+        </p>
+      ) : (
+        ""
+      )}
+    </>
   );
 };
 

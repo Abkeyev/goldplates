@@ -1,7 +1,7 @@
 import React from "react";
-import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     chipStyle: {
       fontWeight: 400,
@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) =>
       lineHeight: "12px",
       padding: "8px 12px",
       borderRadius: 30,
-      cursor: "pointer",
+      whiteSpace: "nowrap",
     },
     block: {
       display: "block",
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
     outlined: {},
     fPrimary: {
       color: "white",
-      backgroundColor: "#27AE60",
+      backgroundColor: "#00A755",
     },
     fSecondary: {
       color: "white",
@@ -31,17 +31,24 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: "#E3266A",
     },
     oPrimary: {
-      color: "#27AE60",
-      border: "1px solid #27AE60",
+      color: "#00A755",
+      border: "1px solid #00A755",
     },
     oSecondary: {
       color: "#4D565F",
-      border: "1px solid #4D565F",
+      border: "1px solid #4D565F"
     },
     oSale: {
       color: "#E3266A",
       border: "1px solid #E3266A",
     },
+    active: {
+      cursor: 'pointer',
+      '&:hover': {
+        backgroundColor: "#D0D0D0",
+        border: "1px solid #D0D0D0",
+      }
+    }
   })
 );
 
@@ -53,17 +60,17 @@ interface BccChipProps extends React.HTMLAttributes<HTMLSpanElement> {
   mr?: string | "0";
   mb?: string | "0";
   ml?: string | "0";
-  type: "filled" | "outlined";
+  type: "contained" | "outlined";
   color: "primary" | "secondary" | "sale";
-  onClick?: any;
   className?: string;
+  onClick?: any;
 }
 
 const BccChip = (props: BccChipProps) => {
   const classes = useStyles();
-  const { type, color, block, mt, mr, mb, ml, className, children } = props;
+  const { type, color, block, mt, mr, mb, ml, className, children, onClick } = props;
   const typeOfChip = () => {
-    if (type === "filled") {
+    if (type === "contained") {
       if (color === "primary") return classes.fPrimary;
       else if (color === "secondary") return classes.fSecondary;
       else if (color === "sale") return classes.fSale;
@@ -79,14 +86,14 @@ const BccChip = (props: BccChipProps) => {
     <span
       className={`${classes.chipStyle} ${typeOfChip()} ${
         block ? classes.block : ""
-      } ${className ? className : ""} `}
+      } ${className ? className : ""} ${onClick && type === 'outlined' ? classes.active : ''}`}
       style={{
         marginTop: mt,
         marginRight: mr,
         marginBottom: mb,
         marginLeft: ml,
       }}
-      onClick={props.onClick}
+      onClick={onClick && onClick}
     >
       {children}
     </span>

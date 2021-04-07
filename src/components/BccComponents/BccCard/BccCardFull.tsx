@@ -1,37 +1,138 @@
 import React from "react";
+import { Grid } from "@material-ui/core";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
-import { BccChip, BccTypography, BccButton } from "..";
+import { BccTypography, BccChip } from "../";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    container: {
-      maxWidth: 1280,
-      margin: "0 auto",
-      boxSizing: "border-box",
-      padding: "48px",
+    [theme.breakpoints.between("md", "xl")]: {
+      outerContainer: {
+        backgroundColor: "#fafafa",
+      },
+      container: {
+        maxWidth: 1280,
+        boxSizing: "border-box",
+        padding: 48,
+        margin: "0 auto",
+        "& > div": {
+          "& > div:first-child": {
+            width: "calc(70% - 48px)",
+            textAlign: "left",
+          },
+          "& > div:last-child": {
+            width: "calc(30% - 48px)",
+            textAlign: "center",
+            "& > img": {
+              width: "100%",
+              maxWidth: 250,
+            },
+          },
+        },
+      },
+      chipWrap: {
+        display: "flex",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        "& > span:last-child": {
+          marginBottom: 16,
+        },
+      },
+      mobileApp: {
+        backgroundColor: "#ffffff",
+        boxShadow:
+          "0px 10px 20px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.04)",
+        padding: "32px 64px 0",
+        borderRadius: 12,
+        "& > div:first-child": {
+          width: "80%",
+          marginRight: 48,
+        },
+      },
+      desc: {
+        marginBottom: 48,
+      },
+      qr: {},
+      title: {},
+      AS: {
+        marginRight: 36,
+      },
+      GP: {
+        marginRight: 40,
+      },
+      mobileLinks: {},
     },
-    chip: {
-      marginRight: 8,
-      marginBottom: 8,
-      display: "flex",
-      width: "fit-content",
-      height: "fit-content",
-    },
-    chipWrap: {
-      display: "flex",
-      flexDirection: "row",
-      flexWrap: "wrap",
-      "& > span:last-child": {
-        marginBottom: 16,
+    [theme.breakpoints.down("sm")]: {
+      outerContainer: {
+        backgroundColor: "#fafafa",
+      },
+      chipWrap: {
+        display: "flex",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        "& > span:last-child": {
+          marginBottom: 16,
+        },
+      },
+      container: {
+        maxWidth: 1280,
+        boxSizing: "border-box",
+        padding: 20,
+        margin: "0 auto",
+      },
+      mobileApp: {
+        backgroundColor: "#ffffff",
+        padding: "20px 20px 0",
+        borderRadius: 8,
+        flexWrap: "wrap",
+        justifyContent: "center",
+        "& > div:first-child": {
+          marginRight: 0,
+          width: "100%",
+        },
+        "& > div:last-child": {
+          "& > img": {
+            // maxWidth:
+          },
+        },
+      },
+      desc: {
+        marginBottom: 20,
+        textAlign: "center",
+        "& > img": {
+          maxWidth: 140,
+        },
+      },
+      qr: { display: "none" },
+      title: { display: "none" },
+      mobMA: {
+        display: "block",
+        width: "max-content",
+        textTransform: "uppercase",
+        marginBottom: 26,
+      },
+      AS: {
+        marginRight: 18,
+      },
+      GP: {
+        marginRight: 0,
+      },
+      mobileLinks: {
+        justifyContent: "center",
+        marginBottom: 12,
       },
     },
-    card: {
-      width: "40%",
-      borderRadius: 8,
-      boxShadow:
-        "0px 0px 1px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04), 0px 10px 20px rgba(0, 0, 0, 0.04)",
-      display: "flex",
-      flexDirection: "column",
+    [theme.breakpoints.down("xs")]: {
+      container: {
+        padding: 20
+      },
+      mobMA: {
+        width: "auto",
+      },
+      desc: {
+        "& img": {
+          maxWidth: 120,
+        },
+      },
     },
   })
 );
@@ -43,69 +144,81 @@ interface Chip {
 }
 
 interface BccCardFullProps extends React.HTMLAttributes<HTMLDivElement> {
-  title?: any;
-  text?: any;
+  title: any;
+  text: any;
   chips?: Array<Chip>;
   bgColor?: string;
   bgImg?: string;
-  imgPos?: "left" | "right";
 }
 
 const BccCardFull = (props: BccCardFullProps) => {
-  const classes = useStyles();
-  const { children, text, bgColor, bgImg, imgPos, title, chips } = props;
+  const classes = useStyles({});
+  const { text, bgImg, title, chips } = props;
+
   return (
-    <div style={{ backgroundColor: bgColor ? bgColor : "#fafafa" }}>
+    <div className={classes.outerContainer}>
       <div className={classes.container}>
-        <div
-          className={classes.card}
-          style={{
-            background: bgImg
-              ? `url(${process.env.PUBLIC_URL + bgImg}) ${
-                  imgPos ? imgPos : "right"
-                } no-repeat white`
-              : "white",
-            backgroundSize: "contain",
-            padding:
-              imgPos === "left"
-                ? "20px 20px 30px calc(60% - 20px)"
-                : "20px calc(60% - 20px) 30px 20px",
-          }}
+        <Grid
+          container
+          justify="space-between"
+          wrap="nowrap"
+          alignItems="center"
+          className={classes.mobileApp}
         >
-          {chips?.length && (
-            <div className={classes.chipWrap}>
-              {chips.map((c: any) => {
-                return (
-                  <>
-                    <BccChip
-                      className={classes.chip}
-                      type={c.type === "outlined" ? "outlined" : "filled"}
-                      color={
-                        c.color === "sale"
-                          ? "sale"
-                          : c.color === "secondary"
-                          ? "secondary"
-                          : "primary"
-                      }
-                    >
-                      {c.title}
-                    </BccChip>
-                  </>
-                );
-              })}
-            </div>
-          )}
-          {title && (
-            <BccTypography block type="h4">
+          <Grid item>
+            {chips?.length && (
+              <div className={classes.chipWrap}>
+                {chips.map((c: any) => {
+                  return (
+                    <>
+                      <BccChip
+                        className={classes.mobMA}
+                        type={c.type}
+                        color={
+                          c.color === "sale"
+                            ? "sale"
+                            : c.color === "secondary"
+                            ? "secondary"
+                            : "primary"
+                        }
+                      >
+                        {c.title}
+                      </BccChip>
+                    </>
+                  );
+                })}
+              </div>
+            )}
+            <BccTypography
+              type="h2"
+              mb="12px"
+              mt="20px"
+              block
+              className={classes.mobMA}
+            >
               {title}
             </BccTypography>
-          )}
-          {text && (
-            <BccTypography block type="p2">
+            <BccTypography
+              type="h5"
+              weight="normal"
+              className={classes.desc}
+              block
+            >
               {text}
             </BccTypography>
-          )}
-        </div>
+          </Grid>
+          <Grid item style={{ width: "50%" }}>
+            <img
+              src={bgImg}
+              style={{
+                width: "80%",
+                margin: "0 auto",
+                maxHeight: 300,
+                display: "block",
+              }}
+            />
+          </Grid>
+        </Grid>
       </div>
     </div>
   );

@@ -13,7 +13,7 @@ const BccTab = withStyles({
     minWidth: "auto",
     padding: 0,
     marginRight: 30,
-    ["@media (max-width:960px)"]: {
+    ["@media (max-width:1060px)"]: {
       fontSize: 14,
     },
     "&.MuiTab-textColorInherit.Mui-selected": {
@@ -26,6 +26,9 @@ const BccTab = withStyles({
       textDecoration: "inherit",
       color: "inherit",
     },
+    '&:hover': {
+      color: '#000D1A'
+    }
   },
 })((props: any) => <Tab disableRipple disableFocusRipple {...props} />);
 

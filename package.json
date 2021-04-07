@@ -1,6 +1,6 @@
 {
-  "homepage": "https://www.bcc.kz/cards/social-card",
-  "name": "social-card",
+  "homepage": "https://www.bcc.kz/product/goldplates",
+  "name": "goldplates",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -24,7 +24,6 @@
     "prettier": "^2.0.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-maskedinput": "^4.0.1",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",

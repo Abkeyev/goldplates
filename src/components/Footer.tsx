@@ -54,7 +54,7 @@ const Footer = (props: any) => {
         >
           <Grid item>
             <BccTypography type="p2" block color="#FAFAFA">
-              © 2000 - 2020 АО 'Банк ЦентрКредит'
+              © 2000 - {new Date().getFullYear()} АО 'Банк ЦентрКредит'
             </BccTypography>
             <BccTypography type="p2" block color="#FAFAFA">
               Все права защищены.

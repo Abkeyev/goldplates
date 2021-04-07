@@ -6,7 +6,7 @@ const BccTabs = withStyles({
   root: {
     "& .MuiTabs-indicator": {
       height: 3,
-      backgroundColor: "#C35BC0",
+      backgroundColor: "#00A755",
     },
     "& .MuiTabs-flexContainer": {
       alignItems: "center",
@@ -14,7 +14,7 @@ const BccTabs = withStyles({
     },
     "& span a": {
       height: "auto",
-      padding: "24px 0",
+      padding: "20px 0",
     },
   },
 })((props: any) => <Tabs {...props} />);

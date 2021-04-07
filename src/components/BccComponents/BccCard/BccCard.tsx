@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
-import { BccChip, BccTypography, BccButton } from "..";
+import { BccChip, BccTypography, BccButton, BccLink } from "..";
+import { ChipsProps, ButtonsProps } from "../../../interfaces";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -14,6 +15,9 @@ const useStyles = makeStyles((theme: Theme) =>
           "0px 0px 1px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04), 0px 10px 20px rgba(0, 0, 0, 0.04)",
         borderRadius: 8,
         overflow: "hidden",
+        "& > div:first-child": {
+          backgroundPositionX: "center",
+        },
       },
       title: {
         marginBottom: 16,
@@ -25,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
         marginBottom: 48,
       },
       horizontal: {
-        flexDirection: "row",
+        flexDirection: "row-reverse",
         justifyContent: "space-between",
         height: "auto",
         "& > div:first-child": {
@@ -73,6 +77,11 @@ const useStyles = makeStyles((theme: Theme) =>
       },
       cardBtn: {
         marginTop: "auto",
+        "& a": {
+          color: "inherit",
+          width: '100%',
+          textDecoration: "inherit",
+        },
       },
       chipWrap: {
         display: "flex",
@@ -84,111 +93,110 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     [theme.breakpoints.down("sm")]: {},
+    textInner: {
+      '& > p': {
+        margin: 0
+      }
+    }
   })
 );
-
-interface Chip {
-  title: string;
-  type: "filled" | "outlined";
-  color: "primary" | "secondary" | "sale";
-}
 
 interface BccCardProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string;
   text: any;
   bgColor?: string;
-  btnText: string;
+  btn: ButtonsProps[];
   variant: "horizontal" | "vertical";
-  img?: string;
+  img: string;
+  link?: boolean | false;
   fullImg?: boolean | false;
-  chips?: Array<Chip>;
+  chips: ChipsProps[] | [];
+}
+
+interface Color {
+  [key: string]: 'primary' | 'secondary' | 'sale';
 }
 
 const BccCard = (props: BccCardProps) => {
   const classes = useStyles();
-  const {
-    title,
-    btnText,
-    text,
-    bgColor,
-    variant,
-    img,
-    fullImg,
-    chips,
-    children,
-  } = props;
+  const { title, btn, text, variant, img, chips } = props;
+  const colors: Color = {
+    '#27AE60': 'primary',
+    '#4D565F': 'secondary',
+    '#E3266A': 'sale'
+  }
   return (
     <div
       className={`${classes.card} ${
         variant === "horizontal" ? classes.horizontal : ""
       }`}
     >
-      {img &&
-        (fullImg ? (
-          <div
-            className={classes.fullImg}
-            style={{
-              backgroundImage: `url(${process.env.PUBLIC_URL + "/img/" + img})`,
-              backgroundRepeat: `no-repeat`,
-              backgroundSize: "cover",
-              minHeight: 196,
-            }}
-          ></div>
-        ) : (
-          <div
-            className={
-              variant === "horizontal" ? classes.horizontalImg : classes.img
-            }
-            style={{ backgroundColor: bgColor ? bgColor : "#F6F6F6" }}
-          >
-            <img src={process.env.PUBLIC_URL + "/img/" + img} alt={title} />
-          </div>
-        ))}
+      {img && (
+        <div
+          className={classes.fullImg}
+          style={{
+            backgroundImage: `url(${encodeURI(img)})`,
+            backgroundRepeat: `no-repeat`,
+            backgroundSize: "cover",
+            minHeight: 196,
+          }}
+        ></div>
+      )}
 
       <div className={classes.contentCard}>
-        {chips?.length && (
+        {chips && chips.length > 0 && (
           <div className={classes.chipWrap}>
-            {chips.map((c: any) => {
-              return (
-                <>
-                  <BccChip
-                    className={classes.chip}
-                    type={c.type === "outlined" ? "outlined" : "filled"}
-                    color={
-                      c.color === "sale"
-                        ? "sale"
-                        : c.color === "secondary"
-                        ? "secondary"
-                        : "primary"
-                    }
-                  >
-                    {c.title}
-                  </BccChip>
-                </>
-              );
-            })}
+            {(chips as ChipsProps[]).map((c: ChipsProps) => 
+                    <BccChip
+                      className={classes.chip}
+                      type={c.chip.type}
+                      color={colors[c.chip.color.toUpperCase()] || 'primary'}
+                    >
+                      {c.chip.title}
+                    </BccChip>
+            )}
           </div>
         )}
         <BccTypography type="h5" block className={classes.title}>
           {title}
         </BccTypography>
         <BccTypography
-          type="h5"
+          type="p2"
           block
           className={
             variant === "horizontal" ? classes.horizontalText : classes.text
           }
         >
-          {text}
+          <div className={classes.textInner} dangerouslySetInnerHTML={{ __html: text }} />
         </BccTypography>
-        <BccButton
-          variant="outlined"
-          fullWidth
-          color="secondary"
-          className={classes.cardBtn}
-        >
-          {btnText}
-        </BccButton>
+        {btn?.length > 0 &&
+          btn.map((b: ButtonsProps, index: number) => (
+            <BccButton
+              variant={b.button.buttonType}
+              fullWidth
+              color={b.button.buttonColor}
+              className={classes.cardBtn}
+              style={{
+                marginBottom: index === 0 && btn.length > 1 ? 12 : 0,
+              }}
+            >
+              {b.button.buttonLink.startsWith("https://") ? (
+                <BccLink
+                  href={b.button.buttonLink}
+                  style={{
+                    color: "inherit",
+                    textDecoration: "none",
+                  }}
+                >
+                  {b.button.buttonText}
+                </BccLink>
+              ) : (
+                <a href={b.button.buttonLink !== undefined ? `${b.button.buttonLink}` : ""}>
+                  {b.button.buttonText}
+                </a>
+              )}
+            </BccButton>
+          ))}
       </div>
     </div>
   );
